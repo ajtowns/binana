@@ -1,0 +1,28 @@
+sequenceDiagram
+  rect rgb(191, 223, 255)
+    note over Requester,Provider: Request a new template
+    Requester->>+Provider: gettmplt [round=0 basis_hash]
+    note left of Provider: Generate new template
+    Provider->>-Requester: tmplt [hash round=0 tip nonce basis_hash basis_delta sketches]
+  end
+  rect rgb(255, 223, 191)
+    note over Requester,Provider: Reconcile shortids
+    loop
+      Requester->>Provider: gettmplt [hash round=1..4 masks]
+      Provider->>Requester: tmplt [hash round=1..4 masks shortids sketches]
+    end
+  end
+  rect rgb(191, 223, 255)
+    note over Requester,Provider: Resolve shortids
+  end
+  rect rgb(255, 223, 191)
+    note over Requester,Provider: Obtain missing transactions
+    opt
+      Requester->>Provider: gettmplttxn [hash shortidposns]
+      Provider->>Requester: tmplttxn [hash txs...]
+      Provider->>Requester: tmplttxn [hash txs...]
+      Provider->>Requester: tmplttxn [hash txs...]
+    end
+  end
+    note right of Requester: Store txs from template
+    note right of Requester: Attempt to add new txs to mempool
