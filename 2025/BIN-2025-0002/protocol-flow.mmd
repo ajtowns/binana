@@ -1,15 +1,15 @@
 sequenceDiagram
   rect rgb(191, 223, 255)
     note over Requester,Provider: Request a new template
-    Requester->>+Provider: gettmplt [round=0 basis_hash]
+    Requester->>+Provider: gettmplt [round=0 basis_id]
     note left of Provider: Generate new template
-    Provider->>-Requester: tmplt [hash round=0 tip nonce basis_hash basis_delta sketches]
+    Provider->>-Requester: tmplt [round=0 id tip nonce basis_id/idx/posns sketches]
   end
   rect rgb(255, 223, 191)
     note over Requester,Provider: Reconcile shortids
     loop
-      Requester->>Provider: gettmplt [hash round=1..4 masks]
-      Provider->>Requester: tmplt [hash round=1..4 masks shortids sketches]
+      Requester->>Provider: gettmplt [round=1..4 id masks]
+      Provider->>Requester: tmplt [round=1..4 id basis_idx masks shortids sketches]
     end
   end
   rect rgb(191, 223, 255)
@@ -18,10 +18,10 @@ sequenceDiagram
   rect rgb(255, 223, 191)
     note over Requester,Provider: Obtain missing transactions
     opt
-      Requester->>Provider: gettmplttxn [hash shortidposns]
-      Provider->>Requester: tmplttxn [hash txs...]
-      Provider->>Requester: tmplttxn [hash txs...]
-      Provider->>Requester: tmplttxn [hash txs...]
+      Requester->>Provider: gettmplttxn [id shortidposns]
+      Provider->>Requester: tmplttxn [id txs...]
+      Provider->>Requester: tmplttxn [id txs...]
+      Provider->>Requester: tmplttxn [id txs...]
     end
   end
     note right of Requester: Store txs from template
